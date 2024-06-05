@@ -15,10 +15,10 @@ const showProducts = async(req, res) => {
         res.send(baseHTML(navBar(req.url), 
             `
                 <h1>${req.url.includes("products") 
-                ? "Hola, estas en la pagina " 
-                + (req.params.category ? "de " + req.params.category : "principal") 
+                ? "Hola, estas en la pagina" 
+                + (req.params.category ? " de " + req.params.category : "principal") 
                 : "Hola, estas en el dashboard" 
-                + (req.params.category ? "- " + req.params.category : "")}</h1>
+                + (req.params.category ? " - " + req.params.category : "")}</h1>
                 <h2>Todos los productos aqui</h2>
                 <div>
                     ${showEachProduct(products, req.url)}
@@ -153,7 +153,7 @@ const deleteProduct = async(req, res) => {
 const baseHTML = (navbar, content) => {
     const html = `
         <!DOCTYPE html>
-        <html lang="en">
+        <html lang="es">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -171,27 +171,20 @@ const baseHTML = (navbar, content) => {
 };
 
 const navBar = (url) => {
- const nav = `
+    const site = url.includes("product") ? "/products" : "/dashboard";
+    const nav = `
     <nav class="mainNav">
-        <div class="mainNav__wrap">     
-            ${url.includes("product") ? `
-            <a href='/products'>Principal</a>
-            <a href="/products/category/Camisetas">Camisetas</a>
-            <a href="/products/category/Pantalones">Pantalones</a>
-            <a href="/products/category/Zapatos">Zapatos</a>
-            <a href="/products/category/Accesorios">Accesorios</a>
-            ` 
-            : `
-            <a href='/dashboard'>Dashboard</a>
-            <a href="/dashboard/category/Camisetas">Camisetas</a>
-            <a href="/dashboard/category/Pantalones">Pantalones</a>
-            <a href="/dashboard/category/Zapatos">Zapatos</a>
-            <a href="/dashboard/category/Accesorios">Accesorios</a>
-            <a href='/dashboard/new'>Añadir nuevo producto</a>
-            `}
+        <div class="mainNav__wrap">   
+            <a href='${site}'>Principal</a>
+            <a href="${site}/category/Camisetas">Camisetas</a>
+            <a href="${site}/category/Pantalones">Pantalones</a>
+            <a href="${site}/category/Zapatos">Zapatos</a>
+            <a href="${site}/category/Accesorios">Accesorios</a>  
+            ${!site.includes("product") ? "<a href='/dashboard/new'>Añadir nuevo producto</a>" : ""}
         </div>
     </nav
     `;
+
     return nav;
 }
 
@@ -206,9 +199,8 @@ const showEachProduct = (arr, url) => {
             <a href="${url.includes("product") ? "/products/"+element.id : "/dashboard/"+element.id}">
                 ${url.includes("product") ? "Ver Producto" : "Revisar Producto"}
             </a>
-        </div>
-        `
-    });
+        </div>     
+    `});
 
     return productHtml;
 }

@@ -3,11 +3,22 @@ const Product = require('../models/Products.js');
 //Devuelve una vista u otra dependiendo de si se accede desde el dashboard o no.
 const showProducts = async(req, res) => {
     try {
-        const products = await Product.find();
+        let products = "";
 
-        res.send(baseHTML(
+        if(req.params.category) {
+            const category = req.params.category;
+            products = await Product.find({Categoria: category});
+        } else {
+            products = await Product.find();
+        }
+
+        res.send(baseHTML(navBar(req.url), 
             `
-                <h1>${req.url.includes("products") ? "Hola, estas en la pagina principal": "Hola, estas en el dashboard"}</h1>
+                <h1>${req.url.includes("products") 
+                ? "Hola, estas en la pagina " 
+                + (req.params.category ? "de " + req.params.category : "principal") 
+                : "Hola, estas en el dashboard" 
+                + (req.params.category ? "- " + req.params.category : "")}</h1>
                 <h2>Todos los productos aqui</h2>
                 <div>
                     ${showEachProduct(products, req.url)}
@@ -23,6 +34,8 @@ const showProducts = async(req, res) => {
 //Devuelve una vista u otra dependiendo de si se accede desde el dashboard o no.
 const showProductById = async(req, res) => {
     try {
+        console.log(req.params.id)
+        console.log(req.params.type)
         const id = req.params.id ? req.params.id : req.params.productId;
         const product = await Product.findById(id);
 
@@ -33,7 +46,7 @@ const showProductById = async(req, res) => {
             </form> 
         `;
 
-        res.status(200).send(baseHTML(`
+        res.status(200).send(baseHTML(navBar(req.url),`
                 <h1>Detalle de producto ${product.Nombre}</h1>
                 <p>Descripcion: ${product.Descripcion}</p>
                 <p>Imagen: ${product.Imagen}</p>
@@ -52,7 +65,7 @@ const showProductById = async(req, res) => {
 
 const showNewProduct = async(req, res) => {
     try {
-        res.send(baseHTML(`
+        res.send(baseHTML(navBar(req.url),`
             <h1>Añade un producto</h1>
             <form action="/dashboard" method="post">
                 <label for="Nombre">Nombre:</label>
@@ -80,7 +93,7 @@ const showEditProduct = async(req, res) => {
     try {
         const id = req.params.productId;
         const product = await Product.findById(id);
-        res.send(baseHTML(`
+        res.send(baseHTML(navBar(req.url),`
             <h1>Modifica el producto</h1>
             <h2>Producto: ${product.Nombre}</h2>
             <form action="/dashboard/${id}" method="post">
@@ -137,7 +150,7 @@ const deleteProduct = async(req, res) => {
     }
 }
 
-const baseHTML = (content) => {
+const baseHTML = (navbar, content) => {
     const html = `
         <!DOCTYPE html>
         <html lang="en">
@@ -147,12 +160,40 @@ const baseHTML = (content) => {
             <title>Document</title>
         </head>
         <body>
-            ${content}
+            ${navbar}
+            <main>
+                ${content}
+            </main>
         </body>
         </html>   
     `;
     return html;
 };
+
+const navBar = (url) => {
+ const nav = `
+    <nav class="mainNav">
+        <div class="mainNav__wrap">     
+            ${url.includes("product") ? `
+            <a href='/products'>Principal</a>
+            <a href="/products/category/Camisetas">Camisetas</a>
+            <a href="/products/category/Pantalones">Pantalones</a>
+            <a href="/products/category/Zapatos">Zapatos</a>
+            <a href="/products/category/Accesorios">Accesorios</a>
+            ` 
+            : `
+            <a href='/dashboard'>Dashboard</a>
+            <a href="/dashboard/category/Camisetas">Camisetas</a>
+            <a href="/dashboard/category/Pantalones">Pantalones</a>
+            <a href="/dashboard/category/Zapatos">Zapatos</a>
+            <a href="/dashboard/category/Accesorios">Accesorios</a>
+            <a href='/dashboard/new'>Añadir nuevo producto</a>
+            `}
+        </div>
+    </nav
+    `;
+    return nav;
+}
 
 const showEachProduct = (arr, url) => {
     let productHtml = "";

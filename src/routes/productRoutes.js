@@ -13,10 +13,16 @@ const {
 
 //Vista usuario
 router.get('/products', showProducts);
+//
+router.get('/products/category/:category', showProducts);
+//
 router.get('/products/:id', showProductById);
 
 //Vista admin.
 router.get('/dashboard', showProducts);
+//
+router.get('/dashboard/category/:category', showProducts);
+//
 router.get('/dashboard/new', showNewProduct);
 router.post('/dashboard', addNewProduct);
 router.get('/dashboard/:productId', showProductById);

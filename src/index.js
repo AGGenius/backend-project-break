@@ -1,5 +1,7 @@
-const express = require("express");
+const express = require('express');
 const app = express();
+
+const path =  require('path');
 
 require('dotenv').config();
 const PORT = process.env.PORT;
@@ -21,14 +23,17 @@ app.use(express.urlencoded({extended: true}));
 // En el form que queramos usar el delete debemos especificar que el metodo sea "post", type="hidden", name="_method" y value="delete" o value="put"
 app.use(methodOverride((req, res) => {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
-      const method = req.body._method
-      delete req.body._method
-      return method
+      const method = req.body._method;
+      delete req.body._method;
+      return method;
     };
   }
 ));
 
+app.use('/static', express.static(path.join(__dirname, '..', 'public')));
+
 app.use('/', router);
+
 
 dbConnection();
 

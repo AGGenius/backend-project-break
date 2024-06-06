@@ -11,7 +11,11 @@ const {
     deleteProduct, 
 } = require('../controllers/productController.js')
 
+
 //Vista usuario
+router.get('/', (req, res) => {
+    res.redirect('/products');
+})
 router.get('/products', showProducts);
 //
 router.get('/products/category/:category', showProducts);

@@ -1,0 +1,74 @@
+const { param, body } = require('express-validator');
+const Product = require('../models/Products.js');
+
+const validCatergory = (value) => {
+    const categories = Product.schema.tree.Categoria.enum;
+
+	if (!categories.includes(value)) {
+		throw new Error(`Not a valid category, should one of these ${categories}`);
+	}
+	return true;
+}
+
+const validSize = (value) => {
+    const sizes = Product.schema.tree.Talla.enum;
+
+	if (!sizes.includes(value)) {
+		throw new Error(`Not a valid size, should one of these ${sizes}`);
+	}
+	return true;
+}
+
+const idParamSchema = [
+	param('id')
+		.notEmpty()
+		.withMessage(`Product ID is required`)
+		.isLength({ min: 24 })
+		.withMessage('Invalid product ID'),
+]
+
+const productidParamSchema = [
+	param('productId')
+		.notEmpty()
+		.withMessage(`Product ID is required`)
+		.isLength({ min: 24 })
+		.withMessage('Invalid product ID'),
+]
+
+const productBodySchema = [
+	body('Nombre')
+		.trim()
+		.notEmpty()
+		.withMessage('Product name is required')
+		.isLength({ min: 5 })
+		.withMessage('Product name must be at least 5 characters long'),
+    body('Descripcion')
+		.trim()
+		.notEmpty()
+		.withMessage('Description is required'),
+	body('Imagen')
+        .trim()
+        .notEmpty()
+        .withMessage('Image is required'),
+	body('Categoria')
+        .trim()
+        .notEmpty()
+        .withMessage('Category is required')
+        .custom(validCatergory),
+	body('Talla')
+		.trim()
+		.notEmpty()
+		.withMessage('Size is required')
+        .custom(validSize),
+    body('Precio')
+        .isInt()
+        .withMessage('Price must be a number')
+        .notEmpty()
+        .withMessage('Price is required')
+]
+
+module.exports = {
+	idParamSchema,
+    productidParamSchema,
+    productBodySchema,
+}

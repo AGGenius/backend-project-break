@@ -2,165 +2,94 @@ const Product = require('../models/Products.js');
 
 //Devuelve una vista u otra dependiendo de si se accede desde el dashboard o no.
 const showProducts = async(req, res) => {
-    try {
-        let products = "";
+    let products = "";
 
-        if(req.params.category) {
-            const category = req.params.category;
-            products = await Product.find({Categoria: category});
-        } else {
-            products = await Product.find();
-        }
-
-        res.send(baseHTML(navBar(req.url), 
-            `
-                <h1 class="main__tittle">${req.url.includes("products") 
-                ? "Hola, estas en la pagina" 
-                + (req.params.category ? " de " + req.params.category : " principal") 
-                : "Hola, estas en el dashboard" 
-                + (req.params.category ? " - " + req.params.category : "")}</h1>
-                <section class="product__display">
-                    ${showEachProduct(products, req.url)}
-                </section>
-            `)
-        );
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({message: "There was a problem retrieving all products."});
+    if(req.params.category) {
+        const category = req.params.category;
+        products = await Product.find({Categoria: category});
+    } else {
+        products = await Product.find();
     }
-}
+    
+    res.send(baseHTML(navBar(req.url), 
+        `
+            <h1 class="main__tittle">${req.url.includes("products") 
+            ? "Hola, estas en la pagina" 
+            + (req.params.category ? " de " + req.params.category : " principal") 
+            : "Hola, estas en el dashboard" 
+            + (req.params.category ? " - " + req.params.category : "")}</h1>
+            <section class="product__display">
+                ${showEachProduct(products, req.url)}
+            </section>
+        `)
+    );
+};
 
 //Devuelve una vista u otra dependiendo de si se accede desde el dashboard o no.
 const showProductById = async(req, res) => {
-    try {
-        const id = req.params.id ? req.params.id : req.params.productId;
-        const product = await Product.findById(id);
+    const id = req.params.id ? req.params.id : req.params.productId;
+    const product = await Product.findById(id);
 
-        const extraLinks = `
-        <div class="product__box__details__links">
-            <a class="product__box__details__editLink" href="/dashboard/${product.id}/edit">Editar producto</a>
-            <form class="product__box__details__delButton" action="/dashboard/${product.id}/delete" method="post">
-                <button  type="hidden" name="_method" value="delete">Eliminar producto</button>
-            </form> 
-        </div>  
-        `;
+    const extraLinks = `
+    <div class="product__box__details__links">
+        <a class="product__box__details__editLink" href="/dashboard/${product.id}/edit">Editar producto</a>
+        <form class="product__box__details__delButton" action="/dashboard/${product.id}/delete" method="post">
+            <button  type="hidden" name="_method" value="delete">Eliminar producto</button>
+        </form> 
+    </div>  
+    `;
 
-        res.status(200).send(baseHTML(navBar(req.url),`
-            <h1 class="product__tittle">Detalle de producto ${product.Nombre}</h1>
-            <article class="product__box__details">
-                <div class="product__box__details__main">
-                    <p class="product__description">
-                        <span>Descripcion:</span> 
-                        ${product.Descripcion}
-                    </p>
-                    <p class="product__category">
-                        <span>Categoria:</span> 
-                        ${product.Categoria}
-                    </p>
-                        <p class="product__size">
-                        <span>Talla:</span> ${product.Talla}
-                    </p>
-                        <p class="product__price">
-                        <span>Precio:</span> ${product.Precio}
-                    </p>
-                    ${ req.url.includes("products") ? "" : extraLinks   }
-                </div>  
-                <img src="/${product.Imagen}" alt="${product.Nombre} photo" class="product__box__details__image">
-            </article>
-            `)
-        );
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({message: "There was a problem retrieving the product."});
-    }
+    res.status(200).send(baseHTML(navBar(req.url),`
+        <h1 class="product__tittle">Detalle de producto ${product.Nombre}</h1>
+        <article class="product__box__details">
+            <div class="product__box__details__main">
+                <p class="product__description">
+                    <span>Descripcion:</span> 
+                    ${product.Descripcion}
+                </p>
+                <p class="product__category">
+                    <span>Categoria:</span> 
+                    ${product.Categoria}
+                </p>
+                    <p class="product__size">
+                    <span>Talla:</span> ${product.Talla}
+                </p>
+                    <p class="product__price">
+                    <span>Precio:</span> ${product.Precio}
+                </p>
+                ${ req.url.includes("products") ? "" : extraLinks   }
+            </div>  
+            <img src="/${product.Imagen}" alt="${product.Nombre} photo" class="product__box__details__image">
+        </article>
+        `)
+    );
 };
 
 const showNewProduct = async(req, res) => {
-    try {
-        res.send(baseHTML(navBar(req.url),`
-            <h1>Añade un producto</h1>
-            <form class="form__newProduct" action="/dashboard" method="post">
-                <label for="Nombre">Nombre:</label>
-                <input type="text" id="Nombre" name="Nombre" required><br>
-                <label for="Descripcion">Descripcion:</label>
-                <input type="text" id="Descripcion" name="Descripcion" required><br>
-                <label for="Imagen">Imagen:</label>
-                <input type="text" id="Imagen" name="Imagen" required><br>
-                <label for="Categoria">Categoria:</label>
-                <input type="text" id="Categoria" name="Categoria" required><br>
-                <label for="Talla">Talla:</label>
-                <input type="text" id="Talla" name="Talla" required><br>
-                <label for="Precio">Precio:</label>
-                <input type="text" id="Precio" name="Precio" required><br>
-                <button class="form__newProduct__button" type="submit">Añadir producto</button>
-            </form>  
-        `));
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({message: "There was a problem retrieving the dashboard to add a new product."})
-    }
+    res.send(baseHTML(navBar(req.url),baseForm()));
 }
 
 const showEditProduct = async(req, res) => {
-    try {
-        const id = req.params.productId;
-        const product = await Product.findById(id);
-        res.send(baseHTML(navBar(req.url),`
-            <h1>Modifica el producto</h1>
-            <h2>Producto: ${product.Nombre}</h2>
-            <form class="form__editProduct" action="/dashboard/${id}" method="post">
-                <label for="Nombre">Nombre:</label>
-                <input type="text" id="Nombre" name="Nombre" value="${product.Nombre}" required><br>
-                <label for="Descripcion">Descripcion:</label>
-                <input type="text" id="Descripcion" name="Descripcion" value="${product.Descripcion}" required><br>
-                <label for="Imagen">Imagen:</label>
-                <input type="text" id="Imagen" name="Imagen" value="${product.Imagen}" required><br>
-                <label for="Categoria">Categoria:</label>
-                <input type="text" id="Categoria" name="Categoria" value="${product.Categoria}" required><br>
-                <label for="Talla">Talla:</label>
-                <input type="text" id="Talla" name="Talla" value="${product.Talla}" required><br>
-                <label for="Precio">Precio:</label>
-                <input type="text" id="Precio" name="Precio" value="${product.Precio}" required><br>       
-                <button class="form__editProduct__button" type="hidden" name="_method" value="put">Guardar cambios</button>
-            </form>
-        `));
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({message: "There was a problem creating the product."});
-    }
+    const id = req.params.productId;
+    const product = await Product.findById(id);
+    res.send(baseHTML(navBar(req.url),baseForm(product)));
 }
 
 const addNewProduct = async(req, res) => {
-    try {
-        await Product.create(req.body);
-        res.status(200).redirect("/dashboard");
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({message: "There was a problem creating the product."});
-    }
+    await Product.create(req.body);
+    res.status(200).redirect("/dashboard");
 }
 
 const updateProduct = async(req, res) => {
-    try {
-        const id = req.params.productId;
-        await Product.findByIdAndUpdate(id, req.body);
-        res.status(200).redirect("/dashboard");
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({message: "There was a problem creating the product."});
-    }
+    const id = req.params.productId;
+    await Product.findByIdAndUpdate(id, req.body);
+    res.status(200).redirect("/dashboard");
 }
 
 const deleteProduct = async(req, res) => {
-    try {
-        const id = req.params.productId;
-        await Product.findByIdAndDelete(id, req.body);
-        res.status(200).redirect('/dashboard');
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({message: "There was a problem creating the product."});
-    }
+    const id = req.params.productId;
+    await Product.findByIdAndDelete(id, req.body);
+    res.status(200).redirect('/dashboard');
 }
 
 const baseHTML = (navbar, content) => {
@@ -217,6 +146,32 @@ const showEachProduct = (arr, url) => {
     `});
 
     return productHtml;
+}
+
+const baseForm = (product) => {
+    const form = `
+        <h1>${product ? "Modifica" : "Añade"} el producto</h1>
+        ${product ? `<h2>Producto: ${product.Nombre}</h2>` : ""}
+        <form class="form__editProduct" action="/dashboard/${product ? product.id : ""}" method="post">
+            <label for="Nombre">Nombre:</label>
+            <input type="text" id="Nombre" name="Nombre" value="${product ? product.Nombre : ""}" required><br>
+            <label for="Descripcion">Descripcion:</label>
+            <input type="text" id="Descripcion" name="Descripcion" value="${product ? product.Descripcion : ""}" required><br>
+            <label for="Imagen">Imagen:</label>
+            <input type="text" id="Imagen" name="Imagen" value="${product ? product.Imagen : ""}" required><br>
+            <label for="Categoria">Categoria:</label>
+            <input type="text" id="Categoria" name="Categoria" value="${product ? product.Categoria : ""}" required><br>
+            <label for="Talla">Talla:</label>
+            <input type="text" id="Talla" name="Talla" value="${product ? product.Talla : ""}" required><br>
+            <label for="Precio">Precio:</label>
+            <input type="text" id="Precio" name="Precio" value="${product ? product.Precio : ""}" required><br>   
+            ${product ? 
+            '<button class="form__editProduct__button" type="hidden" name="_method" value="put">Guardar cambios</button>' :
+            '<button class="form__newProduct__button" type="submit">Añadir producto</button>'}
+        </form>
+    `;
+
+    return form;
 }
 
 module.exports = {

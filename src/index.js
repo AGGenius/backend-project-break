@@ -39,6 +39,16 @@ app.use('/static', express.static(path.join(__dirname, '..', 'public')));
 
 app.use('/', router);
 
+app.use((err, req, res, next) => {
+  // All errors from async & non-async route above will be handled here
+  if (err) {
+    // console.log(err)
+    return (
+      err.message ? res.status(err.statusCode || 500).send(err.message) : res.sendStatus(500)
+    )
+  }
+  next()
+})
 
 dbConnection();
 

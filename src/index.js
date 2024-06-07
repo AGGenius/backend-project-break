@@ -14,9 +14,14 @@ const methodOverride = require('method-override');
 
 const dbConnection = require('./config/db.js');
 
+// Para prevenir ataques de inyección de caracteres especiales en la BD de mongo.
+const mongoSanitize = require('express-mongo-sanitize');
+
 app.use(express.json());
 
 app.use(express.urlencoded({extended: true}));
+
+app.use(mongoSanitize());
 
 // Middleware para encontrar y verificar mediante el request que contiene un body, que es un objeto, y que incluye un
 // "_method". Si se cumplen las condiciones, realiza la tarea con el metodo deseado, "sustituyendo" el original por el oculto.

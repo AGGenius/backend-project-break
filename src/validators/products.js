@@ -37,30 +37,36 @@ const productidParamSchema = [
 
 const productBodySchema = [
 	body('Nombre')
+        .escape()
 		.trim()
 		.notEmpty()
 		.withMessage('Product name is required')
 		.isLength({ min: 5 })
 		.withMessage('Product name must be at least 5 characters long'),
     body('Descripcion')
+        .escape()
 		.trim()
 		.notEmpty()
 		.withMessage('Description is required'),
 	body('Imagen')
+        .escape()
         .trim()
         .notEmpty()
         .withMessage('Image is required'),
 	body('Categoria')
+        .escape()
         .trim()
         .notEmpty()
         .withMessage('Category is required')
         .custom(validCatergory),
 	body('Talla')
+        .escape()
 		.trim()
 		.notEmpty()
 		.withMessage('Size is required')
         .custom(validSize),
     body('Precio')
+        .escape()
         .isInt()
         .withMessage('Price must be a number')
         .notEmpty()

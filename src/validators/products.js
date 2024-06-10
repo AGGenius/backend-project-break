@@ -35,19 +35,28 @@ const productidParamSchema = [
 		.withMessage('Invalid product ID'),
 ]
 
+const categoryParamSchema = [
+	param('category')
+		.notEmpty()
+		.withMessage(`Category is required`)
+		.custom(validCatergory)
+]
+
 const productBodySchema = [
 	body('Nombre')
         .escape()
 		.trim()
 		.notEmpty()
 		.withMessage('Product name is required')
-		.isLength({ min: 5 })
-		.withMessage('Product name must be at least 5 characters long'),
+		.isLength({ min: 5, max: 25 })
+		.withMessage('Product name must be at least 5 characters long, and not exceed 25 characters.'),
     body('Descripcion')
         .escape()
 		.trim()
 		.notEmpty()
-		.withMessage('Description is required'),
+		.withMessage('Description is required')
+		.isLength({ min: 10, max: 50 })
+		.withMessage('Product name must be at least 10 characters long, and not exceed 50 characters.'),
 	body('Imagen')
         .escape()
         .trim()
@@ -77,4 +86,5 @@ module.exports = {
 	idParamSchema,
     productidParamSchema,
     productBodySchema,
+	categoryParamSchema,
 }

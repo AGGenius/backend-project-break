@@ -64,14 +64,14 @@ Para poder iniciar los servicios de nuestra aplicación, se deberán seguir los 
 Los endpoints del servidor son los siguientes: 
 
 ### Por defecto ###
-- `/` - `GET` &rarr  Si no se especifica una ruta, se redirigirá a `/products`. Esta es la ruta por defecto.
-- `/products` - `GET` &rarr Ruta base para poder ver todos los productos de la base de datos.
-- `/products/category/:category` - `GET` &rarr Ruta en la que se puede especificar la categoría de los productos que queremos poder visualizar. La categoría corresponderá al parámetro pasado en `:category`.
-- `/products/:id` - `GET` &rarr Para poder ver la vista de detalle de un producto en base al parámetro `:id`.
+- `/` - `GET` &rarr;  Si no se especifica una ruta, se redirigirá a `/products`. Esta es la ruta por defecto.
+- `/products` - `GET` &rarr; Ruta base para poder ver todos los productos de la base de datos.
+- `/products/category/:category` - `GET` &rarr; Ruta en la que se puede especificar la categoría de los productos que queremos poder visualizar. La categoría corresponderá al parámetro pasado en `:category`.
+- `/products/:id` - `GET` &rarr; Para poder ver la vista de detalle de un producto en base al parámetro `:id`.
 
 ### Administrador ###
 - `/dashboard` - `GET` &rarr; Vista general para el administrador del servidor. En esta vista estará presente un medio para añadir nuevos productos a la base de datos.
-- `/dashboard/category/:category` - `GET` &rarr Vista filtrada por categoría para el administrador, según el parámetro `:category' .
+- `/dashboard/category/:category` - `GET` &rarr; Vista filtrada por categoría para el administrador, según el parámetro `:category' .
 - `/dashboard/new` - `GET` &rarr; Ruta para ver el formulario para añadir un nuevo producto a la base de datos.
 - `/dashboard` - `POST` &rarr Ruta para añadir un nuevo producto a la base de datos según los valores contenidos en el body.
 - `/dashboard/:productId` - `GET` &rarr; Vista en detalle de un producto especificado por el parámetro `:productId' dentro del panel del administrador. Contendrá los accesos para editar o eliminar el producto.

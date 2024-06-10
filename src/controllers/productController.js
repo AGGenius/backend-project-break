@@ -76,8 +76,8 @@ const showEditProduct = async(req, res) => {
 }
 
 const addNewProduct = async(req, res) => {
-    await Product.create(req.body);
-    res.status(200).redirect("/dashboard");
+    const product = await Product.create(req.body);
+    res.status(201).redirect(201, '/dashboard');
 }
 
 const updateProduct = async(req, res) => {

@@ -53,3 +53,5 @@ app.use((err, req, res, next) => {
 dbConnection();
 
 app.listen(PORT, () => console.log(`Server started on http://localhost:${PORT}`));
+
+module.exports = app;

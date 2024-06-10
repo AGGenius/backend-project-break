@@ -56,7 +56,7 @@ const productBodySchema = [
 		.notEmpty()
 		.withMessage('Description is required')
 		.isLength({ min: 10, max: 50 })
-		.withMessage('Product name must be at least 10 characters long, and not exceed 50 characters.'),
+		.withMessage('Product description must be at least 10 characters long, and not exceed 50 characters.'),
 	body('Imagen')
         .escape()
         .trim()

@@ -77,19 +77,19 @@ const showEditProduct = async(req, res) => {
 
 const addNewProduct = async(req, res) => {
     const product = await Product.create(req.body);
-    res.status(201).redirect(201, '/dashboard');
+    res.redirect(201, '/dashboard');
 }
 
 const updateProduct = async(req, res) => {
     const id = req.params.productId;
     await Product.findByIdAndUpdate(id, req.body);
-    res.status(200).redirect("/dashboard");
+    res.redirect(200, '/dashboard');
 }
 
 const deleteProduct = async(req, res) => {
     const id = req.params.productId;
     await Product.findByIdAndDelete(id, req.body);
-    res.status(200).redirect('/dashboard');
+    res.redirect(200, '/dashboard');
 }
 
 const baseHTML = (navbar, content) => {

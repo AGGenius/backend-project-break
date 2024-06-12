@@ -5,7 +5,7 @@ let auth;
 
 const initializeFB = () => {
     const firebaseConfig = {
-        apiKey: "AIzaSyCF2mYMzx0QMtvx8P3wgcV3Wo-VhBHoOB4",
+        apiKey: process.env.API_KEY,
         authDomain: "project-break-2.firebaseapp.com",
         projectId: "project-break-2",
         storageBucket: "project-break-2.appspot.com",

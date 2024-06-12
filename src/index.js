@@ -6,26 +6,20 @@ const path =  require('path');
 require('dotenv').config();
 const PORT = process.env.PORT;
 
-const router = require('./routes/productRoutes.js')
-
-// Los form en HTML no soportan los metodos PUT y DELETE por defecto, para poder usarlos, una de las maneras, es usar
-// method-override: https://mohammdowais.medium.com/sending-put-and-delete-requests-through-html-f9ffe9e1b6cb
+const router = require('./routes/index.js')
 const methodOverride = require('method-override');
-
 const dbConnection = require('./config/db.js');
-
-// Para prevenir ataques de inyección de caracteres especiales en la BD de mongo.
 const mongoSanitize = require('express-mongo-sanitize');
 
+// Firebase
+
+const {initializeFB} = require('./config/firebase.js');
+initializeFB();
+
 app.use(express.json());
-
 app.use(express.urlencoded({extended: true}));
-
 app.use(mongoSanitize());
 
-// Middleware para encontrar y verificar mediante el request que contiene un body, que es un objeto, y que incluye un
-// "_method". Si se cumplen las condiciones, realiza la tarea con el metodo deseado, "sustituyendo" el original por el oculto.
-// En el form que queramos usar el delete debemos especificar que el metodo sea "post", type="hidden", name="_method" y value="delete" o value="put"
 app.use(methodOverride((req, res) => {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
       const method = req.body._method;
@@ -40,15 +34,12 @@ app.use('/static', express.static(path.join(__dirname, '..', 'public')));
 app.use('/', router);
 
 app.use((err, req, res, next) => {
-  // All errors from async & non-async route above will be handled here
   if (err) {
-    // console.log(err)
-    return (
-      err.message ? res.status(err.statusCode || 500).send(err.message) : res.sendStatus(500)
-    )
+    console.log(err);
+    return (err.message ? res.status(err.statusCode || 500).send(err.message) : res.sendStatus(500));
   }
-  next()
-})
+  next();
+});
 
 dbConnection();
 

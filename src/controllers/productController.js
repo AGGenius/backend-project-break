@@ -125,6 +125,7 @@ const navBar = (url) => {
             <a class="mainNav__wrap__link" href="${site}/category/Zapatos">Zapatos</a>
             <a class="mainNav__wrap__link" href="${site}/category/Accesorios">Accesorios</a>  
             ${!site.includes("product") ? "<a class='mainNav__wrap__link' href='/dashboard/new'>Añadir nuevo producto</a>" : ""}
+            ${!site.includes("product") ? "<a class='mainNav__wrap__link' href='/login/logOutPath'>Logout</a>" : "<a class='mainNav__wrap__link' href='/login'>Login</a>"}
     </div>
     `;
 

@@ -11,7 +11,8 @@ const methodOverride = require('method-override');
 const dbConnection = require('./config/db.js');
 const mongoSanitize = require('express-mongo-sanitize');
 
-// Firebase
+const swaggerUI = require('swagger-ui-express');
+const docs = require('./docs/index');
 
 const {initializeFB} = require('./config/firebase.js');
 initializeFB();
@@ -42,6 +43,8 @@ app.use((err, req, res, next) => {
 });
 
 dbConnection();
+
+app.use('/api-docs', swaggerUI.serve,swaggerUI.setup(docs));
 
 app.listen(PORT, () => console.log(`Server started on http://localhost:${PORT}`));
 

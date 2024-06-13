@@ -1,5 +1,10 @@
 const {initializeApp} = require('firebase/app');
-const  {getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut} = require('firebase/auth');
+const  {
+    getAuth, 
+    createUserWithEmailAndPassword,
+    onAuthStateChanged, 
+    signInWithEmailAndPassword, 
+    signOut} = require('firebase/auth');
 
 let auth;
 
@@ -34,12 +39,39 @@ const authUser = async(req, res, next) => {
         res.locals.user = userCredential;
         next();
     } catch(error) {
-        if(error == 'auth/invalid-email') {
+        if(error.code == 'auth/invalid-email') {
             console.log(error);
-            res.json({ "error": "El email no indicado no tiene cuenta en este servicio."});
-        } else if(error = 'auth/invalid-email'){ 
+            return res.json({ "error": "El email no indicado no tiene cuenta en este servicio."});
+        } else if(error.code = 'auth/invalid-email'){ 
             console.log(error);
-            res.json({ "error": "La contraseña indicada no es correcta."});
+            return res.json({ "error": "La contraseña indicada no es correcta."});
+        } else { 
+            console.log(error);
+            return res.json({ "error": `${error}`});
+        }
+    }
+}
+
+const createAccount = async (req, res, next) => {
+    const loginEmail = req.body.Email;
+    const loginPassword = req.body.Contraseña;  
+    const loginPasswordRepeated = req.body.DobleContraseña;
+
+    if(loginPassword !== loginPasswordRepeated) {   
+        return res.json({ "error": "Las contraseñas no coinciden."});
+    }
+
+    try{
+        const userCredential = await createUserWithEmailAndPassword(auth, loginEmail, loginPassword);
+        res.locals.user = userCredential;
+        next();
+    } catch(error) {
+        if(error.code == 'auth/email-already-in-use') {
+            console.log(error);
+            return res.json({ "error": "El email indicado ya tiene cuenta en el servicio."});
+        } else { 
+            console.log(error);
+            return res.json({ "error": `${error}`});
         }
     }
 }
@@ -73,6 +105,7 @@ const monitorAuthState = (req, res, next) => {
 module.exports = {
     initializeFB,
 	authUser,
+    createAccount,
     logOutUser,
     alrreadyLogged,
     monitorAuthState,

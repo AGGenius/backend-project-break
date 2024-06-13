@@ -34,7 +34,7 @@ const showProductById = async(req, res) => {
     <div class="product__box__details__links">
         <a class="product__box__details__editLink" href="/dashboard/${product.id}/edit">Editar producto</a>
         <form class="product__box__details__delButton" action="/dashboard/${product.id}/delete" method="post">
-            <button  type="hidden" name="_method" value="delete">Eliminar producto</button>
+            <button class="form__button" type="hidden" name="_method" value="delete">Eliminar producto</button>
         </form> 
     </div>  
     `;
@@ -167,8 +167,8 @@ const baseForm = (product) => {
             <label for="Precio">Precio:</label>
             <input type="text" id="Precio" name="Precio" value="${product ? product.Precio : ""}" required><br>   
             ${product ? 
-            '<button class="form__editProduct__button" type="hidden" name="_method" value="put">Guardar cambios</button>' :
-            '<button class="form__newProduct__button" type="submit">Añadir producto</button>'}
+            '<button class="form__editProduct__button form__button" type="hidden" name="_method" value="put">Guardar cambios</button>' :
+            '<button class="form__newProduct__button form__button" type="submit">Añadir producto</button>'}
         </form>
     `;
 

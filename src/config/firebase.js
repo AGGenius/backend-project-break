@@ -31,8 +31,8 @@ const initializeFB = () => {
 }
 
 const authUser = async(req, res, next) => {
-	const loginEmail = req.body.Email;
-    const loginPassword = req.body.Contraseña;
+	const loginEmail = req.body.loginEmail;
+    const loginPassword = req.body.loginContraseña;
 
     try{
         const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
@@ -53,8 +53,8 @@ const authUser = async(req, res, next) => {
 }
 
 const createAccount = async (req, res, next) => {
-    const loginEmail = req.body.Email;
-    const loginPassword = req.body.Contraseña;  
+    const loginEmail = req.body.signupEmail;
+    const loginPassword = req.body.signupContraseña;  
     const loginPasswordRepeated = req.body.DobleContraseña;
 
     if(loginPassword !== loginPasswordRepeated) {   

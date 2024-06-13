@@ -33,9 +33,7 @@ const showProductById = async(req, res) => {
     const extraLinks = `
     <div class="product__box__details__links">
         <a class="product__box__details__editLink" href="/dashboard/${product.id}/edit">Editar producto</a>
-        <form class="product__box__details__delButton" action="/dashboard/${product.id}/delete" method="post">
-            <button class="form__button" type="hidden" name="_method" value="delete">Eliminar producto</button>
-        </form> 
+        <button id="delButton" class="product__box__details__delButton" type="hidden" name="_method" value="${product.id}">Eliminar producto</button>
     </div>  
     `;
 
@@ -61,6 +59,7 @@ const showProductById = async(req, res) => {
             </div>  
             <img src="/${product.Imagen}" alt="${product.Nombre} photo" class="product__box__details__image">
         </article>
+        ${ req.url.includes("products") ? "" : '<script src="/static/extras.js" type="module"></script>' }
         `)
     );
 };
@@ -76,20 +75,20 @@ const showEditProduct = async(req, res) => {
 }
 
 const addNewProduct = async(req, res) => {
-    const product = await Product.create(req.body);
-    res.redirect(201, '/dashboard');
+    await Product.create(req.body);
+    res.redirect('/dashboard');
 }
 
 const updateProduct = async(req, res) => {
     const id = req.params.productId;
     await Product.findByIdAndUpdate(id, req.body);
-    res.redirect(200, '/dashboard');
+    res.redirect('/dashboard');
 }
 
 const deleteProduct = async(req, res) => {
     const id = req.params.productId;
     await Product.findByIdAndDelete(id, req.body);
-    res.redirect(200, '/dashboard');
+    res.redirect('/dashboard');
 }
 
 const baseHTML = (navbar, content) => {

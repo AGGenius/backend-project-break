@@ -167,7 +167,8 @@ main {
 }
 
 .product__box__image, .product__box__details__image {
-    width: 50%;
+    width: auto;
+    max-width: 50%;
     height: 100%;
 
     background-color: rgb(245, 245, 245);

@@ -15,7 +15,7 @@ describe('addProduct', () => {
     test("Create a product", async () => {
         const actualProducts = await Product.countDocuments({});
 
-        resProduct = await request(app).post('/dashboard').send(product).expect(201);
+        resProduct = await request(app).post('/dashboard').send(product).expect(302);
 
         const postProducts = await Product.countDocuments({});
 
@@ -53,7 +53,7 @@ describe('updateProduct', () => {
         testName = testProduct[0].Nombre;
         testId = testProduct[0].id;
 
-        resProduct = await request(app).put('/dashboard/' + testId).send(updatedProductValues).expect(200);
+        resProduct = await request(app).put('/dashboard/' + testId).send(updatedProductValues).expect(302);
         
         updatedProduct = await Product.find({Nombre: "test name updated"}).sort({_id: -1}).limit(1);
         expect(updatedProduct[0]._id).toBeDefined();
@@ -77,12 +77,12 @@ describe('deleteProduct', () => {
     }
 
     test("Delete a product", async () => {
-        newProduct = await request(app).post('/dashboard').send(product).expect(201);
+        newProduct = await request(app).post('/dashboard').send(product).expect(302);
         const actualProducts = await Product.countDocuments({});
 
         createdProduct = await Product.find().sort({_id: -1}).limit(1);
 
-        await request(app).delete(`/dashboard/${createdProduct[0]._id}/delete`).expect(200)
+        await request(app).delete(`/dashboard/${createdProduct[0]._id}/delete`).expect(302)
         const postProducts = await Product.countDocuments({});
 
         expect(postProducts).toBe(actualProducts-1);
